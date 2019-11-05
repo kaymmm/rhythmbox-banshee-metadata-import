@@ -1,8 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 """
-Copyright (c) 2017 Keith Miyake
 Copyright (c) 2009 Wolfgang Steitz
+Copyright (c) 2017 Keith Miyake
+Copyright (c) 2019 Colin B. Macdonald
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
