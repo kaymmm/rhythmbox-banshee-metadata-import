@@ -74,8 +74,7 @@ for song in (root.findall('entry[@type="song"]')):
     if not (playcount_b == 0 or playcount_b is None):
         if playcount is None or playcount_b > playcount:
             playcount = playcount_b
-            # print('Update playcount for "' + title +
-            #       '" to ' + str(playcount))
+            # print('Update playcount for "{}" to {}'.format(title, playcount))
 
     if lastplayed is None and lastplayed_b is not None:
         lastplayed = lastplayed_b
