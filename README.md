@@ -8,3 +8,4 @@ Import metadata from Banshee into Rhythmbox
 * Added default paths for the Rhythmbox and Banshee database files
 * Cleaned up the process of accessing the Rhythmbox database
 * Fixed broken Banshee database access (it wasn't working for me with the `try` statement used previously)
+* Added the ability to import the `DateAddedStamp` from Banshee into Rhythmbox's `last-seen`, if it was earlier.

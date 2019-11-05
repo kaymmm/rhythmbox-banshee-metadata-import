@@ -42,11 +42,11 @@ class banshee_db():
 
     def get_song_info(self, url):
         res = self.con.execute(
-            'SELECT Rating, Playcount, LastPlayedStamp \
+            'SELECT Rating, Playcount, LastPlayedStamp, DateAddedStamp \
                     FROM CoreTracks WHERE Uri=?', (url,)
             ).fetchone()
         if res is None:
-            return None, None, None
+            return None, None, None, None
         else:
             return res
 
@@ -64,8 +64,10 @@ for song in (root.findall('entry[@type="song"]')):
     playcount = int(playcount.text) if playcount is not None else None
     lastplayed = song.find('last-played')
     lastplayed = int(lastplayed.text) if lastplayed is not None else None
+    firstseen = song.find('first-seen')
+    firstseen = int(firstseen.text) if firstseen is not None else None
 
-    rating_b, playcount_b, lastplayed_b = banshee.get_song_info(location)
+    rating_b, playcount_b, lastplayed_b, dateadded_b = banshee.get_song_info(location)
     if rating is None:  # don't overwrite rhythmbox ratings
         if not (rating_b == 0 or rating_b is None):
             rating = rating_b
@@ -81,6 +83,14 @@ for song in (root.findall('entry[@type="song"]')):
     elif lastplayed is not None and lastplayed_b is not None \
             and lastplayed < lastplayed_b:
         lastplayed = lastplayed_b
+
+    if firstseen is None and dateadded_b is not None:
+        firstseen = dateadded_b
+        # print('Update first-seen for "{}" to {}'.format(title, firstseen))
+    elif firstseen is not None and dateadded_b is not None \
+            and firstseen > dateadded_b:
+        firstseen = dateadded_b
+        # print('Update first-seen for "{}" to {}'.format(title, firstseen))
 
     # insert rating into rb db
     if rating is not None:
@@ -98,6 +108,12 @@ for song in (root.findall('entry[@type="song"]')):
     if lastplayed is not None:
         element = etree.Element('last-played')
         element.text = str(lastplayed)
+        song.append(element)
+
+    # update first-seen (aka date added)
+    if firstseen is not None:
+        element = etree.Element('first-seen')
+        element.text = str(firstseen)
         song.append(element)
 
 tree.write(RB_DB)
